@@ -3,11 +3,18 @@
 
 package main
 
-import "github.com/google/wire"
+import (
+	"github.com/google/wire"
+	"libs/core"
+	"log/slog"
+)
 
-// InitializeEvent creates an Event. It will error if the Event is staffed with
-// a grumpy greeter.
-func InitializeEvent(phrase string) (Event, error) {
-	wire.Build(NewEvent, NewGreeter, NewMessage)
-	return Event{}, nil
+func NewLogger() *slog.Logger {
+	wire.Build(core.CreateLogger)
+	return &slog.Logger{}
+}
+
+func NewConfig() *Config {
+	wire.Build(CreateConfig)
+	return &Config{}
 }

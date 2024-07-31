@@ -6,16 +6,19 @@
 
 package main
 
+import (
+	"libs/core"
+	"log/slog"
+)
+
 // Injectors from wire.go:
 
-// InitializeEvent creates an Event. It will error if the Event is staffed with
-// a grumpy greeter.
-func InitializeEvent(phrase string) (Event, error) {
-	message := NewMessage(phrase)
-	greeter := NewGreeter(message)
-	event, err := NewEvent(greeter)
-	if err != nil {
-		return Event{}, err
-	}
-	return event, nil
+func NewLogger() *slog.Logger {
+	slogLogger := core.CreateLogger()
+	return slogLogger
+}
+
+func NewConfig() *Config {
+	mainConfig := CreateConfig()
+	return mainConfig
 }

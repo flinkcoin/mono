@@ -2,4 +2,6 @@ go 1.22
 
 use (
 	./apps/coordinator
+	./libs/core
+	./libs/proto
 )
