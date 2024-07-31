@@ -1,0 +1,212 @@
+syntax = "proto3";
+
+package proto;
+import "google/protobuf/any.proto";
+import "common.proto";
+
+option go_package = "gdfsgdfs";
+
+message Message {
+
+    message IAmAlive {
+        message Peer {
+            bytes address = 1;
+            int32 port = 2;
+        }
+        repeated Peer peers = 1;
+    }
+
+    message AuthenticationReq {
+        bytes token = 1;
+    }
+
+    message AuthenticationRes {
+        message Body {
+            bytes token = 1;
+            org.flinkcoin.data.proto.common.Node node = 2;
+            org.flinkcoin.data.proto.common.NodeAddress nodeAddress = 3;
+        }
+      
+        Body body = 2;
+        bytes signature = 3;
+    }
+
+    message NodePub {
+        message Body {
+            bytes msgId = 1;
+            bytes nodeId = 2;
+            org.flinkcoin.data.proto.common.Node node = 3;
+            org.flinkcoin.data.proto.common.NodeAddress nodeAddress = 4;
+        }
+        Body body = 2;
+        bytes signature = 3;
+    }
+
+    message BlockPub {
+        message Body {
+            bytes msgId = 1;
+            bytes nodeId = 2;
+            org.flinkcoin.data.proto.common.Block block = 3;
+        }
+        Body body = 2;
+        bytes signature = 3;
+    }
+
+
+    message PaymentReq {
+        message Body {
+            bytes msgId = 1;
+            bytes nodeId = 2;
+            org.flinkcoin.data.proto.common.PaymentRequest paymentRequest = 3;
+        }
+        Body body = 2;
+        bytes signature = 3;
+    }
+
+    message BlockConfirmPub {
+        message Body {
+            bytes msgId = 1;
+            bytes nodeId = 2;
+            bytes blockHash = 3;
+        }
+        Body body = 2;
+        bytes signature = 3;
+    }
+
+    message BlockVerifyPub {
+        message Body {
+            bytes msgId = 1;
+            bytes nodeId = 2;
+            bytes blockHash = 3;
+        }
+        Body body = 2;
+        bytes signature = 3;
+    }
+
+     message BlockVerifyConfirmPub {
+        message Body {
+            bytes msgId = 1;
+            bytes nodeId = 2;
+            bytes blockHash = 3;
+        }
+        Body body = 2;
+        bytes signature = 3;
+    }
+
+
+    message BlockReq {
+        bytes accountId = 1;
+        bytes fromBlockHash = 2;
+        int32 amount = 3;
+    }
+
+    message BlockRes {
+        bytes accountId = 1;
+        bytes fromBlockHash = 2;
+        repeated org.flinkcoin.data.proto.common.FullBlock blocks = 3;
+    }
+    
+
+    message FrontierReq {
+        bytes start = 1;
+        int32 age = 2;
+        int32 count = 3;
+    }
+
+    message FrontierRes {
+        message Entry {
+            bytes account = 1;
+            bytes hash = 2;
+        }
+        repeated Entry entries = 1;
+    }
+
+    message TelemetryReq {
+        org.flinkcoin.data.proto.common.Block block = 1;
+    }
+
+    message TelemetryRes {
+        bytes signature = 1;
+        bytes nodeId = 2;
+        int64 blockCount = 3;
+        int64 cementedBlockCount = 4;
+        int64 uncheckedBlockCount = 5;
+        int64 accountCount = 6;
+        int64 bandwidthCap = 7;
+        int64 uptime = 8;
+        int32 peerCount = 9;
+        int32 protocolVersion = 10;
+        bytes genesisBlock = 11;
+        int32 majorVersion = 12;
+        int32 minorVersion = 13;
+        int32 maker = 14;
+        int64 timestamp = 15;
+        int64 activeDifficulty = 16;
+    } 
+
+    message Publish {
+        org.flinkcoin.data.proto.common.Block block = 1;
+    }
+
+
+    message AccountBulkPush {
+        bytes start = 1;
+        bytes stop = 2;
+        repeated org.flinkcoin.data.proto.common.Block blocks = 3;
+    }
+
+    message AccountBulkPull {
+        bytes start = 1;
+        bytes stop = 2;
+        int64 count = 3;
+    }
+
+    message BulkPush {
+        bytes start = 1;
+        bytes stop = 2;
+        repeated org.flinkcoin.data.proto.common.Block blocks = 3;
+    }
+
+    message BulkPull {
+        bytes start = 1;
+        bytes stop = 2;
+        int64 count = 3;
+    }
+
+    message ConfirmReqByHash {
+        message HashPair {
+            bytes first = 1;
+            bytes second = 2;
+        }
+        repeated HashPair hashPairs = 1;
+    }
+
+    message ConfirmReq {
+        ConfirmReqByHash confirmReqByHash = 1;
+        org.flinkcoin.data.proto.common.Block block = 2;
+    }
+
+    message VoteByHash {
+        repeated bytes hashes = 1;
+    }
+    
+    message ConfirmRes {
+        message VoteCommon {
+            bytes account = 1;
+            bytes signature = 2;
+            int64 sequence = 3;
+        }
+        VoteCommon voteCommon = 1;
+        VoteByHash voteByHash = 2;
+        org.flinkcoin.data.proto.common.Block block = 3;
+    }
+
+
+
+    int32 magic = 1;
+    int32 netowrkId = 2;
+    int32 versionMax = 3;
+    int32 versionUsing = 4;
+    int32 versionMin = 5;
+    google.protobuf.Any any = 6;
+}
