@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package proto;
+option go_package="github.com/flinkcoin/flink/libs/proto";
+
+import "core.proto";
+
+message NodePair {
+    bytes key = 1;
+    Node value = 2;
+}
+
+
+message NodeAddressPair {
+    bytes key = 1;
+    NodeAddress value = 2;
+}
+
+message UnclaimedInfoBlock {
+    enum Action {
+        CREATE = 0;
+        DELETE = 1;
+    }
+    bytes accountId = 1;
+    Action action = 2;
+    bytes blockHash = 3;
+}

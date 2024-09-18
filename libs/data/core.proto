@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package proto;
+option go_package="github.com/flinkcoin/flink/libs/proto";
+
+message Block {
+
+    enum SignatureMode {
+        ONE_OF_ONE = 0;
+        TWO_OF_THREE = 1;
+        THREE_OF_THREE = 2;
+        THREE_OF_FIVE = 3;
+        FIVE_OF_FIVE = 4;
+    }
+
+    enum BlockType {
+        CREATE = 0;
+        SEND = 1;
+        RECEIVE = 2;
+        UPDATE = 3;
+    }
+
+    message PublicKeys {
+        SignatureMode singatureMode = 1;
+        repeated bytes publicKey = 2;
+    }
+
+    message Body {
+        int32 version = 1;
+        int64 timestamp = 2;
+        BlockType blockType = 3;
+        bytes previousBlockHash = 4;
+        bytes accountId = 5;
+        bytes delegatedNodeId = 6;
+        int64 balance = 7;
+        int64 amount = 8;
+        bytes sendAccountId = 9;
+        bytes receiveBlockHash = 10;
+        bytes referenceCode= 11;
+        PublicKeys publicKeys = 12;
+    }
+
+    message Signatures {
+        repeated bytes signature = 1;
+    }
+
+
+    message Hash {
+        bytes hash = 1;
+    }
+
+    message Work {
+        bytes work = 1;
+    }
+
+    Body body = 1;
+    Hash blockHash = 2;
+    Signatures signatues = 3;
+    Work work = 4;
+}
+
+message PaymentRequest {
+    bytes fromAccountId = 1;
+    bytes toAccountId = 2;
+    int64 amount = 3;
+    bytes referenceCode = 4;
+}
+
+message FullBlock {
+    Block block = 1;
+    bytes next = 2;
+}
+
+message Node {
+    bytes nodeId = 1;
+    bytes publicKey = 2;
+}
+
+message NodeAddress {
+    string ip = 1;
+    int32 port = 2;
+}
+
