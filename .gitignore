@@ -41,6 +41,14 @@ Thumbs.db
 .editorconfig
 .vscode
 
-/apps/coordinator/coordinator
+/apps/broker/coordinator
 
 .idea
+/bazel-bin
+/bazel-flink
+/bazel-out
+/bazel-testlogs
+
+# Entries below this point are managed by Please (DO NOT EDIT)
+plz-out
+.plzconfig.local

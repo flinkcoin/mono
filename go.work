@@ -1,7 +1,7 @@
-go 1.22
+go 1.23.3
 
 use (
-	./apps/coordinator
+	./apps/broker
 	./libs/core
-	./libs/proto
+	./libs/data_exchange
 )
