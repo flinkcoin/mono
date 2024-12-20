@@ -1,0 +1,20 @@
+load("@rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "pkg",
+    srcs = ["core.go"],
+    importpath = "github.com/flinkcoin/mono/libs/core/pkg",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "lib_test",
+    srcs = ["core_test.go"],
+    embed = [":pkg"],
+)
+
+go_test(
+    name = "pkg_test",
+    srcs = ["core_test.go"],
+    embed = [":pkg"],
+)

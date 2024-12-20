@@ -1,0 +1,16 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "internal",
+    srcs = [
+        "broker.go",
+        "wire_gen.go",
+    ],
+    importpath = "github.com/flinkcoin/mono/apps/broker/internal",
+    visibility = ["//apps/broker:__subpackages__"],
+    deps = [
+        "//apps/broker/internal/config",
+        "//apps/broker/internal/net",
+        "//libs/core/pkg",
+    ],
+)

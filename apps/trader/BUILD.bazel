@@ -1,0 +1,61 @@
+load("@rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
+
+go_library(
+    name = "lib",
+    srcs = ["trader.go"],
+    importpath = "",
+    visibility = ["//visibility:private"],
+    deps = [
+        "@com_github_apple_foundationdb_bindings_go//src/fdb:go_default_library",
+        "@com_github_apple_foundationdb_bindings_go//src/fdb/tuple:go_default_library",
+        "@com_github_ipfs_go_log_v2//:go_default_library",
+        "@com_github_joho_godotenv//:go_default_library",
+        "@com_github_libp2p_go_libp2p//core/crypto:go_default_library",
+        "@com_github_libp2p_go_libp2p//core/host:go_default_library",
+        "@com_github_libp2p_go_libp2p//core/network:go_default_library",
+        "@com_github_libp2p_go_libp2p//core/peer:go_default_library",
+        "@com_github_libp2p_go_libp2p//core/peerstore:go_default_library",
+        "@com_github_multiformats_go_multiaddr//:go_default_library",
+        "@io_etcd_go_etcd_client_v3//:go_default_library",
+        "@org_golang_google_grpc//:grpc",
+    ],
+)
+
+go_binary(
+    name = "trader",
+    embed = [":trader_lib"],
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "lib_test",
+    srcs = ["trader_test.go"],
+    embed = [":lib"],
+)
+
+go_library(
+    name = "trader_lib",
+    srcs = ["trader.go"],
+    importpath = "github.com/flinkcoin/mono/apps/trader",
+    visibility = ["//visibility:private"],
+    deps = [
+        "@com_github_apple_foundationdb_bindings_go//src/fdb:go_default_library",
+        "@com_github_apple_foundationdb_bindings_go//src/fdb/tuple:go_default_library",
+        "@com_github_ipfs_go_log_v2//:go-log",
+        "@com_github_joho_godotenv//:go_default_library",
+        "@com_github_libp2p_go_libp2p//core/crypto",
+        "@com_github_libp2p_go_libp2p//core/host",
+        "@com_github_libp2p_go_libp2p//core/network",
+        "@com_github_libp2p_go_libp2p//core/peer",
+        "@com_github_libp2p_go_libp2p//core/peerstore",
+        "@com_github_multiformats_go_multiaddr//:go-multiaddr",
+        "@io_etcd_go_etcd_client_v3//:go_default_library",
+        "@org_golang_google_grpc//:grpc",
+    ],
+)
+
+go_test(
+    name = "trader_test",
+    srcs = ["trader_test.go"],
+    embed = [":trader_lib"],
+)

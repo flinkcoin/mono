@@ -1,0 +1,18 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "net",
+    srcs = ["net.go"],
+    importpath = "github.com/flinkcoin/mono/apps/broker/internal/net",
+    visibility = ["//apps/broker:__subpackages__"],
+    deps = [
+        "@com_github_libp2p_go_libp2p//:go-libp2p",
+        "@com_github_libp2p_go_libp2p//core/crypto",
+        "@com_github_libp2p_go_libp2p//core/host",
+        "@com_github_libp2p_go_libp2p//core/network",
+        "@com_github_libp2p_go_libp2p//p2p/net/connmgr",
+        "@com_github_libp2p_go_libp2p//p2p/security/noise",
+        "@com_github_libp2p_go_libp2p//p2p/security/tls",
+        "@com_github_multiformats_go_multiaddr//:go-multiaddr",
+    ],
+)

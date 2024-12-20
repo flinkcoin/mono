@@ -1,0 +1,9 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "config",
+    srcs = ["config.go"],
+    importpath = "github.com/flinkcoin/mono/apps/broker/internal/config",
+    visibility = ["//apps/broker:__subpackages__"],
+    deps = ["@com_github_caarlos0_env_v11//:env"],
+)

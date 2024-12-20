@@ -1,0 +1,11 @@
+load("@gazelle//:def.bzl", "gazelle")
+
+# gazelle:prefix github.com/flinkcoin/mono
+# gazelle:build_file_name BUILD.bazel
+# gazelle:go_generate_proto true
+## gazelle:exclude libs/data_exchange/pkg/core.proto
+
+gazelle(
+    name = "gazelle",
+    prefix = "github.com/flinkcoin/mono",
+)
