@@ -10,6 +10,7 @@ node_modules
 
 # IDEs and editors
 /.idea
+.ijwb
 .project
 .classpath
 .c9/
@@ -33,6 +34,7 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+**/build/
 
 # System Files
 .DS_Store
