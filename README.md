@@ -1,10 +1,13 @@
 ```mermaid
-flowchart TD
-    A[Christmas] -->|Get money| B(Go shopping)
-    B --> C{Let me think}
-    C -->|One| D[Laptop]
-    C -->|Two| E[iPhone]
-    C -->|Three| F[fa:fa-car Car]
+graph LR
+    A[Broker] -->|Message| B{NATS}
+    B -->|Cashier Topic| D[Cashier]
+    B -->|Trader Topic| E[Trader]
+    B -->|Auctioneer Topic| F[Auctioneer]
+    FDB[FoundationDB]
+    D<-->FDB
+    E<-->FDB
+    F<-->FDB
   
 ```
 
