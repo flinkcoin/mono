@@ -6,14 +6,18 @@
 
 ```mermaid
 graph LR
-    A[Broker] -->|Message| B{NATS}
+    A[Broker]<-->|Message| B{NATS}
     B -->|Cashier Topic| D[Cashier]
     B -->|Trader Topic| E[Trader]
     B -->|Auctioneer Topic| F[Auctioneer]
     FDB[FoundationDB]
-    D<-->FDB
-    E<-->FDB
-    F<-->FDB
+    D-->FDB
+    E-->FDB
+    F-->FDB
+    ETC[Etcd]
+    D-->ETC
+    E-->ETC
+    F-->ETC
   
 ```
 
