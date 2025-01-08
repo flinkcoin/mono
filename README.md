@@ -1,14 +1,25 @@
+
+
+
+
+# Flink
+
 ```mermaid
-  graph TD;
-      A-->D;
-      A-->C;
-      B-->D;
-      C-->D;
+graph LR
+    A[Broker]<-->|Message| B{NATS}
+    B -->|Cashier Topic| D[Cashier]
+    B -->|Trader Topic| E[Trader]
+    B -->|Auctioneer Topic| F[Auctioneer]
+    FDB[FoundationDB]
+    D-->FDB
+    E-->FDB
+    F-->FDB
+    ETC[Etcd]
+    D-->ETC
+    E-->ETC
+    F-->ETC
+  
 ```
-
-
-
-# GoWorkspace
 
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
