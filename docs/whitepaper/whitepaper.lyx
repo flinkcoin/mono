@@ -1,0 +1,786 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass elsarticle
+\begin_preamble
+% specify here the journal
+\makeatletter
+\def\ps@pprintTitle{%
+\let\@oddhead\@empty
+\let\@evenhead\@empty
+\def\@oddfoot{\footnotesize\itshape
+% line below modified from elsarticle.cls
+ \ifx\@journal\@empty Date prepared
+\else\@journal\fi\hfill\today}%
+\let\@evenfoot\@oddfoot}
+\makeatother
+
+%\fancyhf{} % sets both header and footer to nothing
+\renewcommand{\headrulewidth}{0pt}
+
+%\flushbottom
+%\raggedbottom
+% use this if you need line numbers
+%\usepackage{lineno}
+\end_preamble
+\use_default_options false
+\begin_modules
+fix-cm
+fixltx2e
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\paperfontsize default
+\spacing onehalf
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 2
+\paperpagestyle fancy
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout BeginFrontmatter
+
+\end_layout
+
+\begin_layout Title
+Flink: The feeless distributed payment network
+\begin_inset Flex Titlenotemark
+status open
+
+\begin_layout Plain Layout
+t1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title footnote
+This document is a collaborative effort.
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+t1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Author
+M.
+\begin_inset space ~
+\end_inset
+
+Grasic
+\end_layout
+
+\begin_layout Address
+\begin_inset CommandInset href
+LatexCommand href
+name "matejgrasic@flinkcoin.org"
+target "matejgrasic@flinkcoin.org"
+type "mailto:"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+Cryptocurrency emerged as an interesting technology that promised to revolutioni
+ze the payment system.
+ But as time has passed cryptocurrencies have become pushed into a corner
+ and isolated to store of value speculation.
+ Cryptocurrencies are hardly ever used for payment and most transactions
+ happen only on centralized systems of exchanges.
+ Here we introduce a feeless cryptocurrency based on a block-lattice design
+ and asynchronous transaction and block confirmation.
+ Flink is designed for fast transaction speeds of more than 4000 transactions
+ per second with low latency of around 3 seconds or less.
+ With these characteristics, Flink is the ideal cryptocurrency for consumer
+ transactions as well as high frequency and zero-fee business transactions.
+ Security-wise, all cryptographic elements are incorporated in a swappable
+ design such that cryptographic functions can be changed in case of quantum
+ safety requirements.
+\end_layout
+
+\begin_layout Keywords
+Cryptocurrency 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ Feeless 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ Low latency
+\end_layout
+
+\begin_layout EndFrontmatter
+
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Distributed ledger technology are on the arise since the introduction of
+ Bitcoin in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "bitcoin"
+literal "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Distributed ledger technology (DLT) is on the rise since the introduction
+ of Bitcoin in [bitcoin].
+ Since Bitcoin, many new and promising DLT projects have been introduced
+ but none has really achieved global adaptation as a payment system.
+ DLT based currencies or cryptocurrencies have mostly been isolated to function
+ as a store of value, similar to gold and the idea of a global, fair and
+ cheap payment system has mostly been abandoned.
+ The reason for this is the government's regulations but also high transaction
+ fees and slow transaction verifications.
+ For a DLT currency to be really effective and better than government-backed
+ currencies the transaction speed needs to be near-instant with zero or
+ negligible fees.
+ Without this improvement, DLT currencies provide no real value to the public
+ and the consumer and therefore no reason for usage.
+\end_layout
+
+\begin_layout Subsection
+Motivation
+\end_layout
+
+\begin_layout Standard
+Although many new DTL technologies have been introduced since the introduction
+ of Bitcoin.
+ Real usage of a cryptocurrency as a payment system is still lacking as
+ more projects are now gaining traction as an DeFI (decentralized finance)
+ use case.
+ Therefore room for improvement is still huge.
+ 
+\end_layout
+
+\begin_layout Standard
+The perfect payment system is: 
+\end_layout
+
+\begin_layout Itemize
+Feeless or almost zero fees: Zero fee makes sending money attractive and
+ allows for different business opportunities.
+ 
+\end_layout
+
+\begin_layout Itemize
+Fast: Low latency is important to enabling fast consumer payments for goods.
+\end_layout
+
+\begin_layout Itemize
+Cheap to run: The system has to be available and simple to run.
+ 
+\end_layout
+
+\begin_layout Itemize
+Secure: Obviously security is of utmost importance as trust in the system
+ is required.
+\end_layout
+
+\begin_layout Standard
+In December 2014, Nano (RaiBlocks) was one of the first Directed Acyclic
+ Graph (DAG) based cryptocurrencies that promised all of the properties.
+ DAG is now implemented in many projects alike.
+ The DAG-based cryptocurrencies have a performance advantage as transactions
+ can be confirmed asynchronously instead of synchronously like in a linear
+ system like blockchain.
+ This lowers transaction confirmation times drastically and mostly makes
+ them instant (1-3s range) and also improves transaction throughput to over
+ 1000 tps.
+ Nano fulfilled most of the goals but availability and stability suffer
+ from the feeless design.
+ Without transaction fees, DDOS attacks are very cheap and recent attacks
+ to the Nano network further pronounced this vulnerability.
+ 
+\end_layout
+
+\begin_layout Section
+Basic Concept
+\end_layout
+
+\begin_layout Standard
+Here we introduce Flink, a zero fee, high speed and secure network that
+ is optimized for enterprise usage but can also be run on standard hardware
+ by individuals.
+ The system is optimized for fast transactions based on a peering algorithm
+ that connects most influenceable nodes in a way that block confirmation
+ latencies is minimized.
+ The system follows a similar architecture approach to the Nano currency.
+ Where each account has its own blockchain.
+ Similar to Nano the account chain can only be updated by the account owner.
+ Further, as account blockchain changes can be done independently, we don’t
+ need a common block to fill up with transactions, the confirmation latency
+ is heavily reduced.
+ 
+\end_layout
+
+\begin_layout Subsection
+Account Based
+\end_layout
+
+\begin_layout Standard
+Rather than using a UTXO transaction design used in Bitcoin and many other
+ cryptocurrencies, an account-based design was chosen instead.
+ The advantage of such design is simplicity, speed and usually also lower
+ storage requirements.
+ This approach has one drawback which is anonymity which is harder to provide
+ in the DLT design.
+ For this 2nd layer, solutions are planned.
+ 
+\end_layout
+
+\begin_layout Subsection
+Sending Funds
+\end_layout
+
+\begin_layout Standard
+Because every account blockchain can only be modified by the account owner.
+ Transferring funds can only be done with two transactions.
+ First account A makes a send transaction to account B, then account B claims
+ the transaction by making a new receive transaction.
+ This approach is more complicated compared to blockchains like ethereum
+ and bitcoin, but advantages are in the confirmation process which can be
+ asynchronous and therefore very scalable.
+ 
+\end_layout
+
+\begin_layout Section
+System Design
+\end_layout
+
+\begin_layout Standard
+As already explained the system is based on a block-lattice like structure,
+ where every account has its own blockchain.
+ Consensus is achieved using ORV (Open Representative Voting) introduced
+ in Nano.
+ ORV is a mechanism where each account holder selects a representative.
+ The representative receives a voting weight relative to the balance of
+ all accounts assigned to him.
+ ORV is especially suited for feeless systems as the cost of validating
+ a transaction is low and without any risk.
+ With PoW the cost is very high and with PoS there is some risk involved
+ as you are obligated to stake some currency.
+\end_layout
+
+\begin_layout Subsection
+Block Design
+\end_layout
+
+\begin_layout Standard
+A common state block was chosen to simplify the design.
+ Having all the state information in every block speeds up transaction times
+ and also simplifies the design.
+ It also enhances the node synchronization and the transaction validation
+ process.
+ It does raise storage requirements, but this will be optimized with state
+ pruning.
+ 
+\end_layout
+
+\begin_layout Standard
+The design of the system and the block is heavily focused on change agility.
+ Once a distributed system is in production it’s extremely difficult to
+ change the block design.
+ To ease the burden we include a version code so that block can switch from
+ one to another version.
+ Also, the serialization process is done so that new fields can be added
+ easily.
+\end_layout
+
+\begin_layout Subsection
+Transaction Types
+\end_layout
+
+\begin_layout Standard
+Although all the block structure for every transaction is the same.
+ The system still functionally differentiates between different transactions
+ sent.
+ Flink supports 4 different transaction types: create, send, receive and
+ update.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Create Transaction
+\end_layout
+
+\begin_layout Standard
+Before an account can be used for sending or receiving the account has to
+ be opened first.
+ The account is created with a zero balance.
+ Also, the initial public keys are injected at the beginning and the representat
+ive is selected.
+\end_layout
+
+\begin_layout Subsubsection
+Receive Transaction
+\end_layout
+
+\begin_layout Standard
+Before receiving any transactions, the account has to be created.
+ Once successfully created, transactions can be received.
+ The transaction is received from a corresponding block hash (receiveBlockHash)
+ and sends the transaction to this account.
+ Therefore, a block hash has to be referenced from where we receive the
+ amount.
+ The same block can be referenced only once.
+ The received block updates the balance status.
+\end_layout
+
+\begin_layout Subsubsection
+Send Transaction
+\end_layout
+
+\begin_layout Standard
+Before first sending a transaction, the account has to have a non-zero balance.
+ Once a non-zero value is established, funds can be sent to an account (sendAcco
+untId).
+ With the sent block, the account balance is updated.
+ The balance should never be less than zero.
+\end_layout
+
+\begin_layout Subsubsection
+Update Transaction
+\end_layout
+
+\begin_layout Standard
+An update transaction is mostly meant to assign the representative (representati
+veNodeId).
+ This can be done in creating, updating and receiving transactions also.
+ But this kind of transaction is in case nothing is to be sent or received.
+ 
+\end_layout
+
+\begin_layout Subsection
+Multisig Support
+\end_layout
+
+\begin_layout Standard
+Multisig support is an extremely important feature of every major blockchain.
+ Exchanges and enterprise users need this future to increase security and
+ to spread the responsibility of fund management.
+ Although, multisig-like approaches exist where multiple private keys can
+ share one public key.
+ These approaches are rather complicated to integrate into production environmen
+ts.
+ Therefore, Flink natively supports multisig up to five signatures as the
+ block design to specify multiple public keys and signatures.
+\end_layout
+
+\begin_layout Subsection
+Fast Transaction Times
+\end_layout
+
+\begin_layout Standard
+For a block to be confirmed, a quorum of votes needs to be reached (usually
+ 65% of all weight).
+ For this to happen quickly, all the representatives with high weights have
+ to be interconnected so that message passing and confirmation is as fast
+ as possible.
+ Each node, therefore, tries to connect with as many as possible representative
+ nodes.
+ Nodes are also round-trip latency tested so that fast nodes are connected
+ first.
+ 
+\end_layout
+
+\begin_layout Subsection
+Time-Restricted Transactions
+\end_layout
+
+\begin_layout Standard
+Each block has a creation timestamp.
+ Each transaction can only happen in a predefined time window of, e.g., 10min.
+ If the transaction is not confirmed in this time slot, the transaction
+ becomes invalid.
+ This measure is to help with DOS prevention and also keeps the backlog
+ small.
+ Usually, DLT systems store all transactions until confirmed, but this gets
+ complicated if a transaction is not confirmed in the time frame and can
+ standby for confirmation for days.
+ This measure basically makes a transaction confirm immediately or be cancelled.
+ In which case, the wallet software has to re-resend the transaction.
+ The system is designed for low-latency transactions approaches make sense.
+\end_layout
+
+\begin_layout Section
+Miscellaneous Features
+\end_layout
+
+\begin_layout Subsection
+Payment Request
+\end_layout
+
+\begin_layout Standard
+Flink introduced something usually found in newer traditional mobile banking
+ solutions.
+ Where one user can send a payment request to another user.
+ This user then usually only confirms the payment with the amount, reference
+ number, and description already filed in.
+ In Flink, a payment request is sent to one node, which then redistributes
+ it to all the other nodes online.
+ The wallet system for that particular user receives the request from the
+ relying node and stores it in the local database.
+ The nodes don’t store payment requests, and the whole system works on best
+ effort only.
+ Meaning, the wallet system and its node has to be online for the request
+ to be received.
+ 
+\end_layout
+
+\begin_layout Subsection
+Quantum Safety
+\end_layout
+
+\begin_layout Standard
+As quantum computers slowly evolve, quantum safety is becoming more and
+ more important.
+ Elliptic-curve cryptography is vulnerable to quantum-based attacks, and
+ quantum-resistant cyphers are not yet popular and fully proven.
+ Because of that, Flink is designed with cyphers interchangeability in mind.
+ For instance, account addresses are not created from public keys but are
+ generated randomly.
+ The current valid public keys are specified with the last confirmed block.
+ This allows keys and, in future, cyphers to change more easily.
+ 
+\end_layout
+
+\begin_layout Subsection
+Reference Number/Code
+\end_layout
+
+\begin_layout Standard
+The traditional banking system usually uses payment reference numbers to
+ identify individual payments.
+ In DLT, each payment is usually sent to its own address.
+ Because of Flink’s account-based design, an extra payment reference code
+ was added to the block.
+ This is a practical approach for tracking payments that are usually missing
+ in DLT designs.
+ 
+\end_layout
+
+\begin_layout Section
+Attack Prevention
+\end_layout
+
+\begin_layout Standard
+The most problematic attack thread of a feeless payment system is DOS (denial
+ of service) and DDOS (distributed denial of service) attacks.
+ Because transactions are free, the system is very vulnerable to spam transactio
+ns overloading the whole system.
+ In Flink, many parts of the system are specially designed to prevent such
+ attacks to succeed.
+ 
+\end_layout
+
+\begin_layout Subsection
+DOS Attacks
+\end_layout
+
+\begin_layout Standard
+Here we outline the common DOS attacks the system is most susceptible to.
+ DOS attacks are hard to completely eliminate, especially in a system without
+ fees.
+ But the system still has many approaches to counter such attacks.
+ Overall, the system per the CAP theorem favours consistency and partition
+ tolerance over availability.
+ But availability is potentially sacrificed only during the active attack
+ phase.
+\end_layout
+
+\begin_layout Subsubsection
+Node Overflow Attack
+\end_layout
+
+\begin_layout Standard
+In this attack, the entity creates multiple node addresses.
+ As all nodes need to be confirmed before being added to the database, this
+ can add extreme strain on the whole system.
+ The system protects itself by limiting the number of nodes that can be
+ created per day (initially set to 100).
+ With this protection, the system will operate normally under these conditions.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Account Overflow Attack
+\end_layout
+
+\begin_layout Standard
+This attack overflows the network with multiple accounts.
+ Every node will be able to publish only a limited number of blocks (also
+ account creating blocks).
+ For this attack to succeed, the attacker has to have access to a node with
+ a very high weight as the publish rate is dependent on the node's confirmation
+ weight.
+ Even then, the rate is capped, so the probability of completely disabling
+ the whole network is low.
+ And nodes with high weight will mostly be managed by crypto exchanges which
+ will probably monitor the node integrity and status.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Transaction Overflow Attack
+\end_layout
+
+\begin_layout Standard
+This attack overflows the network with multiple transactions.
+ Like in the previous case, every node will be able to publish only a limited
+ number of blocks (also account creating blocks).
+ For an attack to succeed, the attacker has to have access to a node with
+ a very high weight, which is not trivial to achieve.
+ Additionally, PoW might be introduced in future to further prevent transaction
+ spam.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Unconfirmed Transaction Overflow Attack 
+\end_layout
+
+\begin_layout Standard
+This attack targets the unconfirmed transaction queue of every account.
+ Accounts are required to confirm all incoming transactions.
+ Once the queue reaches a certain size, new elements get discarded.
+ This makes the attack very difficult to really compromise the system.
+ The account owner can still receive transactions that aren’t in the queue
+ but has to query for them manually.
+\end_layout
+
+\begin_layout Subsubsection
+Brute Force Attack 
+\end_layout
+
+\begin_layout Standard
+In case of a DDOS attack, nodes can be removed from the network.
+ Such an attack could temporarily make the system unavailable for confirmations
+ as the 65% voting weight wouldn't be reached.
+ The system would quickly recover once the attack stops.
+ 
+\end_layout
+
+\begin_layout Subsection
+System Integrity Attacks
+\end_layout
+
+\begin_layout Standard
+In these attacks, the attacker usually tries to gain some kind of financial
+ gain.
+ Usually they will try to double-spend or something similar.
+ The ORV consensus algorithm governs the integrity of the system.
+ All transactions need to be confirmed with 65% weights within a time interval.
+ For the system to compromise, the system someone would need to obtain a
+ 65% voting weight.
+\end_layout
+
+\begin_layout Subsubsection
+Primary Protection
+\end_layout
+
+\begin_layout Standard
+As 65% voting weight is rather large, the attacker would need large investments
+ to gain so much voting weight, which is unlikely.
+ Also, such investments would destroy the network and make the investment
+ forfeit.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Fork protection
+\end_layout
+
+\begin_layout Standard
+Local forks can happen in the case an account publishes two transactions
+ with the same previous block.
+ In this case, both transactions will be sent for voting, but each node
+ can vote only for one of the transactions.
+ The transaction which will achieve 65% will be persisted.
+ If no transaction achieves 65% in the set time interval, both transactions
+ forfeit.
+\end_layout
+
+\begin_layout Section
+Implementation
+\end_layout
+
+\begin_layout Standard
+At the implementation phase, the design decision was made to create the
+ system in a higher (managed) programming language.
+ Therefore C, C++ was not considered.
+ In the author's opinion, the system very much resembles an IT system with
+ large storage and database requirements.
+ Such systems are usually performance limited by the database design and
+ not the selected programming language.
+ Therefore, the reference implementation was created in Java.
+ The implementation is available at Github as an open-source project under
+ the Apache license.
+\end_layout
+
+\begin_layout Subsection
+Network
+\end_layout
+
+\begin_layout Standard
+The system uses protobuf for message serialization over a TCP stream.
+ Connections between hosts are limited to one, which is a full duplex.
+ Connection handling is asynchronous with a low memory footprint, allowing
+ for multiple connections.
+ 
+\end_layout
+
+\begin_layout Subsection
+Storage
+\end_layout
+
+\begin_layout Standard
+For storage, RocksDB key value store is used.
+ RocksDB is a highly scalable and performant database with transaction support
+ developed by Facebook.
+\end_layout
+
+\begin_layout Subsection
+Cryptography
+\end_layout
+
+\begin_layout Standard
+For signing, ED25519 is used with standard SHA-512 hashing.
+ Key derivation is based on BIP32 with ED25519 modification in SLIP-0100.
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+Here we present a distributed feeless payment system with a fast transaction
+ confirmation time.
+ The system is based on the ORV consensus mechanism with a block-lattice
+ data structure.
+ As there is no PoW mining involved, the system is very energy efficient
+ and can be run on modest hardware.
+ 
+\end_layout
+
+\begin_layout Section*
+—————–
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "whitepaper"
+options "bibtotoc,elsarticle-harv"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
