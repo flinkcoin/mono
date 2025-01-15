@@ -1,4 +1,4 @@
-![MarineGEO circle logo](/assets/img/MarineGEO_logo.png "MarineGEO logo")
+![MarineGEO circle logo](/BUILD.bazel "MarineGEO logo")
 
 
 
