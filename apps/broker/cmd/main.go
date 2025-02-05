@@ -1,13 +1,16 @@
 package main
 
 import (
-	"github.com/flinkcoin/mono/apps/broker/internal"
+	"github.com/flinkcoin/mono/apps/broker/app"
+	"github.com/flinkcoin/mono/libs/core/pkg/core"
 )
 
 func main() {
 
+	core.Log.Info("Starting broker service!")
+
 	/*broker, err :=*/
-	app := internal.Init()
+	app := app.Init()
 	app.Harbor.Init()
 
 	//	host.Init()
