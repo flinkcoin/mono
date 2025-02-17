@@ -47,7 +47,7 @@ Thumbs.db
 
 .idea
 /bazel-bin
-/bazel-flink
+/bazel-mono
 /bazel-out
 /bazel-testlogs
 

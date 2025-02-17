@@ -1,17 +1,26 @@
 package main
 
 import (
-	"github.com/flinkcoin/mono/apps/broker/app"
-	"github.com/flinkcoin/mono/libs/core/pkg/core"
+	"fmt"
+	"github.com/flinkcoin/mono/apps/broker/internal"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
-
-	core.Log.Info("Starting broker service!")
-
 	/*broker, err :=*/
-	app := app.Init()
-	app.Harbor.Init()
+	app := internal.Init()
+	app.Net.Init()
+
+	if len(os.Args) >= 2 {
+		fmt.Println("Usage: program <argument>")
+		app.Net.Connect(os.Args[1])
+	}
+
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
+	<-sigCh
 
 	//	host.Init()
 }
