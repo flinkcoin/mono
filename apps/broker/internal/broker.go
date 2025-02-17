@@ -10,12 +10,12 @@ var logger *slog.Logger
 var conf *config.Config
 
 type Broker struct {
-	Harbor *net.Net
+	Net *net.Net
 }
 
 func NewBroker(l *slog.Logger, c *config.Config, harbor *net.Net) *Broker {
 	conf = c
 	logger = l
 
-	return &Broker{Harbor: harbor}
+	return &Broker{Net: harbor}
 }

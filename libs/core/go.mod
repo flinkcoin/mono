@@ -1,4 +1,4 @@
-module libs/core
+module github.com/flinkcoin/mono/libs/core
 
 go 1.22
 

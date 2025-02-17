@@ -6,8 +6,8 @@ package internal
 import (
 	"github.com/flinkcoin/mono/apps/broker/internal/config"
 	"github.com/flinkcoin/mono/apps/broker/internal/net"
+	"github.com/flinkcoin/mono/libs/core/pkg"
 	"github.com/google/wire"
-	"libs/core/pkg"
 )
 
 func Init() *Broker {
