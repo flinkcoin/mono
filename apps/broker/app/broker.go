@@ -1,13 +1,13 @@
 package app
 
 import (
-	"github.com/flinkcoin/mono/apps/broker/internal/net"
+	"github.com/flinkcoin/mono/apps/broker/internal/networking"
 )
 
 type Broker struct {
-	Harbor *net.Net
+	Harbor *networking.Host
 }
 
-func NewBroker(harbor *net.Net) *Broker {
+func NewBroker(harbor *networking.Host) *Broker {
 	return &Broker{Harbor: harbor}
 }

@@ -7,13 +7,13 @@
 package app
 
 import (
-	"github.com/flinkcoin/mono/apps/broker/internal/net"
+	"github.com/flinkcoin/mono/apps/broker/internal/networking"
 )
 
 // Injectors from wire.go:
 
 func Init() *Broker {
-	netNet := net.NewNode()
+	netNet := networking.NewNode()
 	broker := NewBroker(netNet)
 	return broker
 }

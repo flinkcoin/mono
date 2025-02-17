@@ -4,11 +4,11 @@
 package app
 
 import (
-	"github.com/flinkcoin/mono/apps/broker/internal/net"
+	"github.com/flinkcoin/mono/apps/broker/internal/networking"
 	"github.com/google/wire"
 )
 
 func Init() *Broker {
-	wire.Build(net.NewNode, NewBroker)
+	wire.Build(networking.NewNode, NewBroker)
 	return nil
 }

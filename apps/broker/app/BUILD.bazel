@@ -8,5 +8,5 @@ go_library(
     ],
     importpath = "github.com/flinkcoin/mono/apps/broker/app",
     visibility = ["//visibility:public"],
-    deps = ["//apps/broker/internal/net"],
+    deps = ["//apps/broker/internal/networking"],
 )
