@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"fmt"
+	"github.com/flinkcoin/mono/libs/core/pkg/core"
 	libp2p "github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p/core/crypto"
 	"github.com/libp2p/go-libp2p/core/host"
@@ -14,18 +15,14 @@ import (
 	libp2ptls "github.com/libp2p/go-libp2p/p2p/security/tls"
 	ma "github.com/multiformats/go-multiaddr"
 	"log"
-	"log/slog"
 	"time"
 )
-
-var logger *slog.Logger
 
 type Net struct {
 	host host.Host
 }
 
-func NewNode(l *slog.Logger) *Net {
-	logger = l
+func NewNode() *Net {
 
 	return &Net{}
 }
@@ -85,7 +82,7 @@ func (n *Net) Init() {
 		panic(err)
 	}
 
-	logger.Info("Hello World, my second hosts ID is %s\n", "hostKey:", n.host.ID())
+	core.Log.Info("Hello World, my second hosts ID is %s\n", "hostKey:", n.host.ID())
 
 	startListener(context.Background(), n.host)
 }
