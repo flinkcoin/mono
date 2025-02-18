@@ -1,0 +1,17 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "broker",
+    srcs = [
+        "api.pb.go",
+        "comm.pb.go",
+    ],
+    importpath = "github.com/flinkcoin/mono/libs/schema/pkg/broker",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/schema/pkg/core",
+        "@org_golang_google_protobuf//reflect/protoreflect",
+        "@org_golang_google_protobuf//runtime/protoimpl",
+        "@org_golang_google_protobuf//types/known/anypb",
+    ],
+)

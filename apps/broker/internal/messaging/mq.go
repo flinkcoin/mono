@@ -1,33 +1,35 @@
-package networking
+package messaging
 
 import (
 	"bufio"
 	"context"
 	"fmt"
-	"github.com/flinkcoin/mono/libs/shared/pkg/base"
 	libp2p "github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p/core/crypto"
 	"github.com/libp2p/go-libp2p/core/host"
 	"github.com/libp2p/go-libp2p/core/network"
-	"github.com/libp2p/go-libp2p/core/peer"
 	"github.com/libp2p/go-libp2p/p2p/net/connmgr"
 	"github.com/libp2p/go-libp2p/p2p/security/noise"
 	libp2ptls "github.com/libp2p/go-libp2p/p2p/security/tls"
 	ma "github.com/multiformats/go-multiaddr"
 	"log"
+	"log/slog"
 	"time"
 )
 
-type Host struct {
+var logger *slog.Logger
+
+type Net struct {
 	host host.Host
 }
 
-func NewHost() *Host {
+func NewNode(l *slog.Logger) *Net {
+	logger = l
 
-	return &Host{}
+	return &Net{}
 }
 
-func (n *Host) Init() {
+func (n *Net) Init() {
 	// To construct a simple host with all the default settings, just use `New`
 
 	// Now, normally you do not just want a simple host, you want
@@ -56,7 +58,7 @@ func (n *Host) Init() {
 		libp2p.Identity(priv),
 		// Multiple listen addresses
 		libp2p.ListenAddrStrings(
-			"/ip4/0.0.0.0/tcp/0",
+			"/ip4/0.0.0.0/tcp/9000",
 		),
 		// support TLS connections_
 		libp2p.Security(libp2ptls.ID, libp2ptls.New),
@@ -82,7 +84,7 @@ func (n *Host) Init() {
 		panic(err)
 	}
 
-	base.Log.Info("Hello World, my second hosts ID is %s\n", "hostKey:", n.host.ID())
+	logger.Info("Hello World, my second hosts ID is %s\n", "hostKey:", n.host.ID())
 
 	startListener(context.Background(), n.host)
 }
@@ -114,39 +116,6 @@ func startListener(ctx context.Context, ha host.Host) {
 	})
 
 	log.Println("listening for connections")
-
-}
-
-func (n *Host) Connect(peerek string) {
-	// Define the peer address to connect to
-	peerAddr, err := ma.NewMultiaddr(peerek)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Extract the peer ID from the multiaddress
-	peerInfo, err := peer.AddrInfoFromP2pAddr(peerAddr)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Connect to the peer
-	if err := n.host.Connect(context.Background(), *peerInfo); err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Connected too", peerInfo.ID)
-
-	// Create a new stream to the peer
-	s, err := n.host.NewStream(context.Background(), peerInfo.ID, "/echo/1.0.0")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = s.Write([]byte("Hello, world!\n"))
-	if err != nil {
-		log.Fatal(err)
-	}
 }
 
 func doEcho(s network.Stream) error {

@@ -1,0 +1,29 @@
+load("@rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "db",
+    srcs = ["db.go"],
+    importpath = "github.com/flinkcoin/mono/apps/broker/internal/db",
+    visibility = ["//apps/broker:__subpackages__"],
+    deps = [
+        "@com_github_libp2p_go_libp2p//:go-libp2p",
+        "@com_github_libp2p_go_libp2p//core/crypto",
+        "@com_github_libp2p_go_libp2p//core/host",
+        "@com_github_libp2p_go_libp2p//core/network",
+        "@com_github_libp2p_go_libp2p//p2p/net/connmgr",
+        "@com_github_libp2p_go_libp2p//p2p/security/noise",
+        "@com_github_libp2p_go_libp2p//p2p/security/tls",
+        "@com_github_multiformats_go_multiaddr//:go-multiaddr",
+    ],
+)
+
+go_test(
+    name = "db_test",
+    srcs = ["db_test.go"],
+    embed = [":db"],
+    deps = [
+        "@com_github_apple_foundationdb_bindings_go//src/fdb",
+        "@com_github_testcontainers_testcontainers_go//:testcontainers-go",
+        "@com_github_testcontainers_testcontainers_go//wait",
+    ],
+)
