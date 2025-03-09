@@ -1,0 +1,27 @@
+{
+    "manifest_version": 3,
+    "name": "Image Hash Calculator",
+    "version": "1.0",
+    "description": "Scans the current page for images and calculates a PDQ hash for each.",
+    "permissions": [
+        "activeTab",
+        "scripting"
+    ],
+    "action": {
+        "default_popup": "popup/popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "magick-config.js",
+                "lib/magick/magickApi.js",
+                "pdq-config.js",
+                "lib/pdq/pdq-photo-hasher.js",
+                "content.js"
+            ]
+        }
+    ]
+}
