@@ -1,83 +1,55 @@
-let pdqModule;
-let modulesInitialized = false;
+// import { Call as MagickCall } from './lib/magick/magickApi.js';
+// const WASM_MAGICK_URL = chrome.runtime.getURL('./lib/magick/magickApi.js');
 
-async function initModules() {
-    if (modulesInitialized) return;
-    await Promise.all([
-        new Promise((resolve) => {
-            const checkMagick = () => {
-                if (window.MagickReady) {
-                    if (window.Magick) {
-                        resolve();
-                    } else {
-                        console.error('Magick not defined after initialization');
-                        resolve(); // Proceed anyway, error will be caught later
-                    }
-                } else {
-                    setTimeout(checkMagick, 100);
-                }
-            };
-            checkMagick();
-        }),
-        new Promise((resolve) => {
-            const checkPDQ = () => {
-                if (window.PDQReady) {
-                    pdqModule = window.PDQModule;
-                    resolve();
-                } else {
-                    setTimeout(checkPDQ, 100);
-                }
-            };
-            checkPDQ();
-        })
-    ]);
-    modulesInitialized = true;
-    console.log('Modules initialized');
-}
+// const loadWasmModule = async () => {
+//     s
+//     const mod = await import(WASM_MAGICK_URL);
 
-// Initialize modules when the content script loads
-initModules().catch(console.error);
+//     // default export is an init function
+//     const isOk = await mod.default().catch((e) => {
+//         console.warn('Failed to init wasm module in content script. Probably CSP of the page has restricted wasm loading.', e);
+//         return null;
+//     });
+
+//     return isOk ? mod : null;
+// };
 
 async function hashImage(url) {
-    if (!modulesInitialized || !pdqModule) {
-        throw new Error('Modules not initialized');
-    }
-    if (typeof Magick === 'undefined') {
-        throw new Error('Magick is not defined');
-    }
     try {
+        // loadWasmModule();
         // Fetch the image
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error('Failed to fetch image');
-        }
-        const arrayBuffer = await response.arrayBuffer();
-        const inputData = new Uint8Array(arrayBuffer);
+        // const response = await fetch(url);
+        // if (!response.ok) {
+        //     throw new Error('Failed to fetch image');
+        // }
+        // const arrayBuffer = await response.arrayBuffer();
+        // const inputData = new Uint8Array(arrayBuffer);
 
-        const extension = url.split('.').pop().toLowerCase();
-        const inputFilename = `input.${extension}`;
-        const tempFilename = 'output.pnm';
+        // const extension = url.split('.').pop().toLowerCase();
+        // const inputFilename = `input.${extension}`;
+        // const tempFilename = 'output.pnm';
 
-        // Convert image to .pnm using wasm-imagemagick
-        const inputFile = { name: inputFilename, content: inputData };
-        const command = ["convert", inputFilename, "-density", "400x400", tempFilename];
-        const processedFiles = await Magick.Call([inputFile], command);
-        if (!processedFiles.length) {
-            throw new Error('Image conversion failed');
-        }
+        // // Convert image to .pnm using wasm-imagemagick
+        // const inputFile = { name: inputFilename, content: inputData };
+        // const command = ["convert", inputFilename, "-density", "400x400", tempFilename];
+        // const processedFiles = await MagickCall([inputFile], command);
+        // if (!processedFiles.length) {
+        //     throw new Error('Image conversion failed');
+        // }
 
-        // Get the converted .pnm data
-        const outputFile = processedFiles[0];
-        const outputData = new Uint8Array(await outputFile.blob.arrayBuffer());
+        // // Get the converted .pnm data
+        // const outputFile = processedFiles[0];
+        // const outputData = new Uint8Array(await outputFile.blob.arrayBuffer());
 
+        // console.log(outputData);
         // Write to PDQ module's Emscripten FS
-        pdqModule.FS.writeFile(tempFilename, outputData);
+        // pdqModule.FS.writeFile(tempFilename, outputData);
 
-        // Compute PDQ hash
-        const hash = pdqModule.ccall('getHash', 'string', ['string'], [tempFilename]);
+        // // Compute PDQ hash
+        // const hash = pdqModule.ccall('getHash', 'string', ['string'], [tempFilename]);
 
-        // Clean up
-        pdqModule.FS.unlink(tempFilename);
+        // // Clean up
+        // pdqModule.FS.unlink(tempFilename);
 
         return hash;
     } catch (e) {
@@ -86,10 +58,8 @@ async function hashImage(url) {
     }
 }
 
-// Rest of your code (hashImageSHA256, UI logic) remains unchanged
 
 async function hashImageSHA256(url) {
-    // USE PDQ ALGORITHM HERE
     const response = await fetch(url);
     const arrayBuffer = await response.arrayBuffer();
     const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
@@ -99,7 +69,6 @@ async function hashImageSHA256(url) {
 
 
 // PLUGIN UI LOGIC
-
 let pluginEnabled = false;
 let tooltipDiv = null;
 const hashCache = new WeakMap();
@@ -133,6 +102,7 @@ function hideTooltip() {
 }
 
 async function imageMouseOverHandler(event) {
+    console.log("Image mouse over handler");
     const img = event.target;
     if (img.tagName.toLowerCase() !== 'img') return;
 
@@ -159,6 +129,7 @@ function enablePlugin() {
         pluginEnabled = true;
         document.addEventListener('mouseover', imageMouseOverHandler, true);
         document.addEventListener('mouseout', imageMouseOutHandler, true);
+        console.log('Image hash plugin enabled');
     }
 }
 
@@ -168,6 +139,7 @@ function disablePlugin() {
         document.removeEventListener('mouseover', imageMouseOverHandler, true);
         document.removeEventListener('mouseout', imageMouseOutHandler, true);
         hideTooltip();
+        console.log('Image hash plugin disabled');
     }
 }
 
