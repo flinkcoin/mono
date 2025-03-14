@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "Flink image authenticity validator",
+  "short_name": "Flink image web tool",
+  "description": "Scans the current page for images and calculates a PDQ hash for each.",
+  "version": "1.0",
+  "author": "Flink",
+  "offline_enabled": false,
+  "permissions": [
+    "sidePanel"
+  ],
+  "side_panel": {
+    "default_path": "sidepanel/index.html"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": {
+      "16": "images/icon16.png",
+      "32": "images/icon32.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "run_at": "document_end",
+      "all_frames": false,
+      "matches": [
+        "*://*/*"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ]
+}
