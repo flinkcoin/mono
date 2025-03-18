@@ -1270,7 +1270,7 @@ function isFileURI(filename) {
 // end include: URIUtils.js
 var wasmBinaryFile;
   // wasmBinaryFile = 'pdq-photo-hasher.wasm';
- wasmBinaryFile = chrome.runtime.getURL("js/lib/pdq/pdq-photo-hasher.wasm");
+ wasmBinaryFile = chrome.runtime.getURL("pdq-photo-hasher.wasm");
 /*  if (!isDataURI(wasmBinaryFile)) {
     wasmBinaryFile = locateFile(wasmBinaryFile);
   }*/
