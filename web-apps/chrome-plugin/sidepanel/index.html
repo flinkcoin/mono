@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flink Image Validator</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div class="header">
+    <img src="./avatar.svg" alt="Flink Logo"> FLINK IMAGE VALIDATOR
+  </div>
+  <div class="content">
+    <div class="image-container">
+      <div id="tooltip" class="tooltip">hover over image to calculate hash</div>
+      <div id="spinner" class="spinner"></div>
+      <img id="hoveredImage" src="" alt="Hovered Image">
+      <p id="imageHash"></p>
+      <p id="score"></p>
+    </div>
+  </div>
+  <script src="index.js" type="module"></script>
+</body>
+</html>

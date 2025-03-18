@@ -1,0 +1,13 @@
+{
+  "name": "chrome-extensions-flink-demo",
+  "version": "1.0",
+  "scripts": {
+    "build": "rollup sidepanel/index.js --file dist/plugin.bundle.js --format iife"
+  },
+  "private": true,
+  "devDependencies": {
+    "wasm-imagemagick": "^1.2.8",
+    "rollup": "4.22.4",
+    "hash-wasm": "^4.7.0"
+  }
+}
