@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package flinkcoin.cashier;
+option go_package="github.com/flinkcoin/mono/libs/schema/pkg/cashier";
+
+import "libs/schema/pkg/broker/comm.proto";
+
+message Msg {
+    flinkcoin.broker.Message message = 1;
+    bytes peerId = 2;
+    bytes peerPublicKey = 3;
+}

@@ -3,7 +3,9 @@ package networking
 import (
 	"bufio"
 	"context"
+	"encoding/binary"
 	"fmt"
+	"github.com/flinkcoin/mono/apps/broker/internal/router"
 	"github.com/flinkcoin/mono/libs/shared/pkg/base"
 	libp2p "github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p/core/crypto"
@@ -14,17 +16,21 @@ import (
 	"github.com/libp2p/go-libp2p/p2p/security/noise"
 	libp2ptls "github.com/libp2p/go-libp2p/p2p/security/tls"
 	ma "github.com/multiformats/go-multiaddr"
+	"io"
 	"log"
 	"time"
 )
 
 type Host struct {
-	host host.Host
+	host   *host.Host
+	router *router.Router
 }
 
-func NewHost() *Host {
-
-	return &Host{}
+func NewHost(h *host.Host, r *Router) *Host {
+	return &Host{
+		host:   h,
+		router: r,
+	}
 }
 
 func (n *Host) Init() {
@@ -97,24 +103,28 @@ func getHostAddress(ha host.Host) string {
 	return addr.Encapsulate(hostAddr).String()
 }
 
-func startListener(ctx context.Context, ha host.Host) {
+func (n *Host) startListener(ctx context.Context, ha host.Host) {
 	fullAddr := getHostAddress(ha)
 	log.Printf("I am %s\n", fullAddr)
 
 	// Set a stream handler on host A. /echo/1.0.0 is
 	// a user-defined protocol name.
-	ha.SetStreamHandler("/echo/1.0.0", func(s network.Stream) {
+	ha.SetStreamHandler("/cashier/1.0.0", func(s network.Stream) {
 		log.Println("listener received new stream")
-		if err := doEcho(s); err != nil {
+		if payload, err := readPayload(s); err != nil {
 			log.Println(err)
 			s.Reset()
-		} else {
-			s.Close()
 		}
+
+		peerId := s.Conn().RemotePeer()
+		pubKey := s.Conn().RemotePublicKey(
+
+
+
+		log.Printf("Received stream from peer: %s, public key: %s\n", peerId, pubKey)
+		pubKey.Raw()
+		n.router.ProcessMsg(payload, peerId, pubKey)
 	})
-
-	log.Println("listening for connections")
-
 }
 
 func (n *Host) Connect(peerek string) {
@@ -149,14 +159,30 @@ func (n *Host) Connect(peerek string) {
 	}
 }
 
-func doEcho(s network.Stream) error {
+func readPayload(s network.Stream) ([]byte, error) {
+	// Create a buffered reader for the stream
 	buf := bufio.NewReader(s)
-	str, err := buf.ReadString('\n')
+
+	// Read the 4-byte length prefix (big-endian)
+	lengthBuf := make([]byte, 4)
+	_, err := io.ReadFull(buf, lengthBuf)
 	if err != nil {
-		return err
+		return nil, err // Could be EOF, network error, etc.
 	}
 
-	log.Printf("read: %s", str)
-	_, err = s.Write([]byte(str))
-	return err
+	// Convert the 4 bytes to an integer
+	length := binary.BigEndian.Uint32(lengthBuf)
+	if length == 0 {
+		return nil, errors.New("empty message length")
+	}
+
+	// Read exactly 'length' bytes for the message
+	payload := make([]byte, length)
+	_, err = io.ReadFull(buf, payload)
+	if err != nil {
+		return nil, err // Could be EOF or partial read
+	}
+
+	// Return the message bytes
+	return payload, nil
 }

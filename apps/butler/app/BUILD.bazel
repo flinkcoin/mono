@@ -1,0 +1,12 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "app",
+    srcs = [
+        "app.go",
+        "wire_gen.go",
+    ],
+    importpath = "github.com/flinkcoin/mono/apps/cashier/app",
+    visibility = ["//visibility:public"],
+    deps = ["//apps/broker/internal/networking"],
+)

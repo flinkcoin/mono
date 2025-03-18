@@ -1,13 +1,15 @@
 package app
 
-import (
-	"github.com/flinkcoin/mono/apps/broker/internal/networking"
-)
+import "github.com/flinkcoin/mono/apps/cashier/internal/messaging"
 
 type App struct {
-	Host *networking.Host
+	Queue *messaging.Queue
 }
 
-func NewApp(host *networking.Host) *App {
-	return &App{Host: host}
+func NewApp(queue *messaging.Queue) *App {
+	return &App{Queue: queue}
+}
+
+func (a *App) Connect() {
+	a.Queue.Connect()
 }

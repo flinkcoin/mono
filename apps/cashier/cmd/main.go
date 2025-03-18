@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
-	"github.com/flinkcoin/mono/apps/broker/app"
+	"github.com/flinkcoin/mono/apps/cashier/app"
+	"os"
 	"os"
 	"os/signal"
 	"syscall"
@@ -11,16 +11,9 @@ import (
 func main() {
 	/*broker, err :=*/
 	a := app.Init()
-	a.Host.Init()
-
-	if len(os.Args) >= 2 {
-		fmt.Println("Usage: program <argument>")
-		a.Host.Connect(os.Args[1])
-	}
-
+	a.Connect()
+	
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 	<-sigCh
-
-	//	host.Init()
 }

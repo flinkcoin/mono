@@ -1,61 +1,51 @@
-// import { Call as MagickCall } from './lib/magick/magickApi.js';
-// const WASM_MAGICK_URL = chrome.runtime.getURL('./lib/magick/magickApi.js');
-
-// const loadWasmModule = async () => {
-//     s
-//     const mod = await import(WASM_MAGICK_URL);
-
-//     // default export is an init function
-//     const isOk = await mod.default().catch((e) => {
-//         console.warn('Failed to init wasm module in content script. Probably CSP of the page has restricted wasm loading.', e);
-//         return null;
-//     });
-
-//     return isOk ? mod : null;
-// };
-
 async function hashImage(url) {
-    try {
-        // loadWasmModule();
-        // Fetch the image
-        // const response = await fetch(url);
-        // if (!response.ok) {
-        //     throw new Error('Failed to fetch image');
-        // }
-        // const arrayBuffer = await response.arrayBuffer();
-        // const inputData = new Uint8Array(arrayBuffer);
-
-        // const extension = url.split('.').pop().toLowerCase();
-        // const inputFilename = `input.${extension}`;
-        // const tempFilename = 'output.pnm';
-
-        // // Convert image to .pnm using wasm-imagemagick
-        // const inputFile = { name: inputFilename, content: inputData };
-        // const command = ["convert", inputFilename, "-density", "400x400", tempFilename];
-        // const processedFiles = await MagickCall([inputFile], command);
-        // if (!processedFiles.length) {
-        //     throw new Error('Image conversion failed');
-        // }
-
-        // // Get the converted .pnm data
-        // const outputFile = processedFiles[0];
-        // const outputData = new Uint8Array(await outputFile.blob.arrayBuffer());
-
-        // console.log(outputData);
-        // Write to PDQ module's Emscripten FS
-        // pdqModule.FS.writeFile(tempFilename, outputData);
-
-        // // Compute PDQ hash
-        // const hash = pdqModule.ccall('getHash', 'string', ['string'], [tempFilename]);
-
-        // // Clean up
-        // pdqModule.FS.unlink(tempFilename);
-
-        return hash;
-    } catch (e) {
-        console.error(e);
-        return 'Error: ' + e.message;
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error('Failed to fetch image');
     }
+    const arrayBuffer = await response.arrayBuffer();
+    // const copiedArrayBuffer = structuredClone(arrayBuffer);
+    // const inputData = new Uint8Array(arrayBuffer);
+
+    const extension = url.split('.').pop().toLowerCase();
+    let inputFilename = `input.${extension}`;
+
+    const tempFilename = 'output_temp.pnm';
+
+    console.log('Processing inputName:', inputFilename);
+
+    inputFilename="input.jpg";
+
+    // Convert image to .pnm using wasm-imagemagick
+    const inputFile = {name: inputFilename, content: Array.apply(null, new Uint8Array(arrayBuffer))};
+    const files = [inputFile];
+    const command = ["convert", inputFilename, "-density", "400x400", tempFilename];
+
+    const hash = await new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage({
+            type: 'PROCESS_IMAGE',
+            files: files,
+            command: command,
+            tempFilename: tempFilename
+        }, response => {
+            // Check if response exists and is properly structured
+            if (!response) {
+                reject(new Error('No response received from background script'));
+                return;
+            }
+
+            if (response.success) {
+                console.log('Image hash:', response.result);
+                resolve(response.result);
+            } else {
+                const error = response.error || 'Unknown error';
+                console.error('Error:', error);
+                reject(new Error(error));
+            }
+        });
+    });
+
+    return hash;
 }
 
 
@@ -102,14 +92,15 @@ function hideTooltip() {
 }
 
 async function imageMouseOverHandler(event) {
-    console.log("Image mouse over handler");
     const img = event.target;
     if (img.tagName.toLowerCase() !== 'img') return;
 
     let hash = hashCache.get(img);
     if (!hash) {
         try {
+
             hash = await hashImage(img.src);
+            // hash = await hashImageSHA256(img.src);
             hashCache.set(img, hash);
         } catch (e) {
             hash = 'Error: ' + e.message;
@@ -150,6 +141,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         } else {
             disablePlugin();
         }
-        sendResponse({ status: 'ok', enabled: pluginEnabled });
+        sendResponse({status: 'ok', enabled: pluginEnabled});
     }
 });

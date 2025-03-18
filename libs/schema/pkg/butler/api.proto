@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package flinkcoin.broker;
-option go_package="github.com/flinkcoin/mono/libs/schema/pkg/broker";
+package flinkcoin.butler;
+option go_package="github.com/flinkcoin/mono/libs/schema/pkg/butler";
 
 import "libs/schema/pkg/core/core.proto";
 

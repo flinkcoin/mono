@@ -1,23 +1,25 @@
 package main
 
 import (
+	"encoding/pem"
 	"fmt"
 	"github.com/flinkcoin/mono/apps/broker/app"
+	"github.com/flinkcoin/mono/libs/shared/pkg/base"
+	"github.com/flinkcoin/mono/libs/shared/pkg/topics"
+	"github.com/libp2p/go-libp2p/core/crypto"
 	"os"
 	"os/signal"
 	"syscall"
 )
 
 func main() {
-	/*broker, err :=*/
 	a := app.Init()
-	a.Host.Init()
+	a.Queue.Connect()
 
-	if len(os.Args) >= 2 {
-		fmt.Println("Usage: program <argument>")
-		a.Host.Connect(os.Args[1])
-	}
-
+	a.Queue.Publish(topics.CashierInbound.String(), []byte("data1"))
+	a.Queue.Publish(topics.CashierInbound.String(), []byte("data2"))
+	a.Queue.Publish(topics.CashierInbound.String(), []byte("data3"))
+	//a.Queue.Subscribe()
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 	<-sigCh

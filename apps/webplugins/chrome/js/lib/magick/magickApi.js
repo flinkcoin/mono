@@ -12,6 +12,31 @@ MERCHANTABLITY OR NON-INFRINGEMENT.
 See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
 ***************************************************************************** */
+import * as MagickModule from './magick.js';
+
+function Call(inputFiles, command) {
+    return call(inputFiles, command);
+}
+
+// Main Call function that maintains original API
+async function call(inputFiles, command) {
+    try {
+
+        const request = {
+            files: inputFiles,
+            args: command,
+        };
+
+        let result=MagickModule.processMessage({data: request});
+
+        return result;
+    } catch (error) {
+        console.error('Error executing ImageMagick command:', error);
+        throw error;
+    }
+}
+
+/// old code
 
 function __awaiter(thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -3740,41 +3765,20 @@ var stacktrace = createCommonjsModule(function (module, exports) {
 /**
  * {@link call} shortcut that only returns the output files.
  */
-function Call(inputFiles, command) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const result = yield call(inputFiles, command);
-        for (let outputFile of result.outputFiles) {
-            outputFile.blob = new Blob([outputFile.buffer]);
-        }
-        return result.outputFiles;
-    });
-}
+// function Call(inputFiles, command) {
+//     return __awaiter(this, void 0, void 0, function* () {
+//         const result = yield call(inputFiles, command);
+//         for (let outputFile of result.outputFiles) {
+//             outputFile.blob = new Blob([outputFile.buffer]);
+//         }
+//         return result.outputFiles;
+//     });
+// }
 /**
  * Low level execution function. All the other functions like [execute](https://github.com/KnicKnic/WASM-ImageMagick/tree/master/apidocs#execute)
  * ends up calling this one. It accept only one command and only in the form of array of strings.
  */
-function call(inputFiles, command) {
-    const request = {
-        files: inputFiles,
-        args: command,
-        requestNumber: magickWorkerPromisesKey,
-    };
-    // let transfer = [];
-    // for (let file of request.files) {
-    //   if(file.content instanceof ArrayBuffer)
-    //   {
-    //     transfer.push(file.content)
-    //   }
-    //   else{
-    //     transfer.push(file.content.buffer)
-    //   }
-    // }
-    const promise = CreatePromiseEvent();
-    magickWorkerPromises[magickWorkerPromisesKey] = promise;
-    magickWorker.postMessage(request); //,transfer)
-    magickWorkerPromisesKey++;
-    return promise;
-}
+
 function CreatePromiseEvent() {
     let resolver;
     let rejecter;
@@ -3846,38 +3850,6 @@ function GetCurrentFileURLHelper1() {
 function GetCurrentFileURL() {
     return GetCurrentFileURLHelper1();
 }
-currentJavascriptURL = GetCurrentFileURL();
-const magickWorkerUrl = GetCurrentUrlDifferentFilename(currentJavascriptURL, 'magick.js');
-function GenerateMagickWorkerText(magickUrl) {
-    // generates code for the following
-    // var magickJsCurrentPath = 'magickUrl';
-    // importScripts(magickJsCurrentPath);
-    return "var magickJsCurrentPath = '" + magickUrl + "';\n" +
-        'importScripts(magickJsCurrentPath);';
-}
-let magickWorker;
-if (currentJavascriptURL.startsWith('http')) {
-    // if worker is in a different domain fetch it, and run it
-    magickWorker = new Worker(window.URL.createObjectURL(new Blob([GenerateMagickWorkerText(magickWorkerUrl)])));
-}
-else {
-    magickWorker = new Worker(magickWorkerUrl);
-}
-const magickWorkerPromises = {};
-let magickWorkerPromisesKey = 1;
-// handle responses as they stream in after being outputFiles by image magick
-magickWorker.onmessage = e => {
-    const response = e.data;
-    const promise = magickWorkerPromises[response.requestNumber];
-    delete magickWorkerPromises[response.requestNumber];
-    const result = {
-        outputFiles: response.outputFiles,
-        stdout: response.stdout,
-        stderr: response.stderr,
-        exitCode: response.exitCode || 0,
-    };
-    promise.resolve(result);
-};
 
 /* auto-generated file using command `npx ts-node scripts/generateImEnums.ts` */
 var IMAlign;

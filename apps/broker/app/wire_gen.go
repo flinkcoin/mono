@@ -7,6 +7,7 @@
 package app
 
 import (
+	"github.com/flinkcoin/mono/apps/broker/internal/messaging"
 	"github.com/flinkcoin/mono/apps/broker/internal/networking"
 )
 
@@ -14,6 +15,7 @@ import (
 
 func Init() *App {
 	host := networking.NewHost()
-	app := NewApp(host)
+	queue := messaging.NewQueue()
+	app := NewApp(host, queue)
 	return app
 }

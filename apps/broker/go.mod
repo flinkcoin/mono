@@ -3,12 +3,12 @@ module github.com/flinkcoin/mono/apps/broker
 go 1.24
 
 require (
-	github.com/apple/foundationdb/bindings/go v0.0.0-20250218044602-d9ea00ef5e7c
 	github.com/caarlos0/env/v11 v11.3.1
 	github.com/google/wire v0.6.0
 	github.com/libp2p/go-libp2p v0.40.0
 	github.com/multiformats/go-multiaddr v0.14.0
 	github.com/nats-io/nats-server/v2 v2.10.25
+	github.com/nats-io/nats.go v1.39.0
 	github.com/testcontainers/testcontainers-go v0.35.0
 )
 
@@ -90,8 +90,8 @@ require (
 	github.com/multiformats/go-multistream v0.6.0 // indirect
 	github.com/multiformats/go-varint v0.0.7 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
+	github.com/nats-io/jwt v1.2.2 // indirect
 	github.com/nats-io/jwt/v2 v2.7.3 // indirect
-	github.com/nats-io/nats.go v1.38.0 // indirect
 	github.com/nats-io/nkeys v0.4.10 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/onsi/ginkgo/v2 v2.22.2 // indirect

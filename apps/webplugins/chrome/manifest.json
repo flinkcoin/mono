@@ -5,10 +5,11 @@
     "description": "Scans the current page for images and calculates a PDQ hash for each.",
     "version": "1.0",
     "author": "Flink",
-    "offline_enabled": false,
+    "offline_enabled": true,
     "permissions": [
         "activeTab",
-        "scripting"
+        "scripting",
+        "alarms"
     ],
     "action": {
         "default_popup": "popup/popup.html"
@@ -17,16 +18,14 @@
         "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
     },
     "background": {
-        "type": "module",
-        "service_worker": "js/background.js"
+        "service_worker": "js/background.js",
+        "type": "module"
     },
     "content_scripts": [
         {
             "run_at": "document_end",
             "all_frames": false,
-            "matches": [
-                "*://*/*"
-            ],
+            "matches": ["<all_urls>"],
             "js": [
                 "js/content.js"
             ],
@@ -35,13 +34,8 @@
     ],
     "web_accessible_resources": [
         {
-            "matches": [
-                "<all_urls>"
-            ],
-            "resources": [
-                "js/wasm/wasm_mod.js",
-                "js/wasm/wasm_mod_bg.wasm"
-            ]
+            "resources": ["js/lib/magick/magickApi.js","js/lib/magick/magick.js", "js/lib/magick/magick.wasm"],
+            "matches": ["<all_urls>"]
         }
     ]
 }
