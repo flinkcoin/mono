@@ -38,14 +38,10 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
         //inputFilename="input.jpg";
 
         // Convert image to .pnm using wasm-imagemagick
-        const inputFile = {name: inputFilename, content: Array.apply(null, new Uint8Array(arrayBuffer))};
+        const inputFile = {name: inputFilename, content: arrayBuffer};
         const files = [inputFile];
         const command = ["convert", inputFilename, "-density", "400x400", tempFilename];
 
-        console.log('Processing image:');
-        for (let file of files) {
-            file.content = new Uint8Array(file.content).buffer;
-        }
 
         let processedFiles = await Magick.Call(files, command);
         let firstOutputImage = processedFiles[0];
@@ -74,7 +70,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
         FS.unlink(filename);
 
         // Display the hash
-        imageHashElement.textContent = result;
+        imageHashElement.textContent = base32r;
         console.log("Final hash:", result);
     } catch (error) {
         console.error('Error processing image:', error);
