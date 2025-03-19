@@ -1,12 +1,14 @@
 import * as Magick from '../node_modules/wasm-imagemagick/dist/magickApi.js';
-import { FS, Module } from '../pdq/pdq-photo-hasher.js';
-import { fromHex, base32Encode } from '../libs/helper.js';
+import {FS, Module} from '../pdq/pdq-photo-hasher.js';
+import {fromHex, base32Encode} from '../libs/helper.js';
+import {getImageExtension} from '../libs/extension.js';
 
 const imgElement = document.getElementById('hoveredImage');
 const imageHashElement = document.getElementById('imageHash');
 const scoreElement = document.getElementById('score');
 const tooltip = document.getElementById('tooltip');
 const spinner = document.getElementById('spinner');
+
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     try {
@@ -26,15 +28,15 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
         const arrayBuffer = await response.arrayBuffer();
         // const copiedArrayBuffer = structuredClone(arrayBuffer);
         // const inputData = new Uint8Array(arrayBuffer);
-    
-        const extension = message.src.split('.').pop().toLowerCase();
+
+        const extension = getImageExtension(message.src, response);
         let inputFilename = `input.${extension}`;
         const tempFilename = 'output_temp.pnm';
-    
+
         console.log('Processing inputName:', inputFilename);
-    
-        inputFilename="input.jpg";
-    
+
+        //inputFilename="input.jpg";
+
         // Convert image to .pnm using wasm-imagemagick
         const inputFile = {name: inputFilename, content: Array.apply(null, new Uint8Array(arrayBuffer))};
         const files = [inputFile];
@@ -81,8 +83,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 });
 
 
-
-
 async function testMagick(message) {
     const response = await fetch(message.src);
     if (!response.ok) {
@@ -92,7 +92,7 @@ async function testMagick(message) {
     const imageData = new Uint8Array(arrayBuffer);
 
     // Create Blob and URL for image display
-    const blob = new Blob([imageData], { type: response.headers.get('Content-Type') || 'image/jpeg' });
+    const blob = new Blob([imageData], {type: response.headers.get('Content-Type') || 'image/jpeg'});
     blobUrl = URL.createObjectURL(blob);
 
     // Promise for image loading
